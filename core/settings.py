@@ -133,6 +133,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 OPENWEATHERMAP_API_KEY = os.environ.get("OPENWEATHERMAP_API_KEY")
 
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 STATIC_ROOT = "static/"
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
