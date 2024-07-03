@@ -5,24 +5,29 @@ import requests
 from django.conf import settings
 
 
+response = requests.get('https://ifconfig.me')
+public_ip = response.text.strip()
+print(public_ip)
+
+
 class HelloView(APIView):
     def get(self, request):
         
         client_ip = self.get_ip_address()
         city = self.get_city()
         temp = self.get_temp()
+        name = self.request.GET.get('visitor_name', 'Guest')
         
         return Response({
             "client_ip": client_ip,
-            "city": city,
-            "temp": temp
+            "location": city,
+            "greeting": f"Hello, {name}!, the temperature is {temp} degrees Celsius in {city}"
         })
         
     
     def get_ip_address(self):
-        response = requests.get('https://ifconfig.me')
-        public_ip = response.text.strip()
-        return public_ip
+        client_ip = self.request.ipinfo.ip,
+        return client_ip[0]
     
     def get_city(self):
         try:
@@ -49,7 +54,7 @@ class HelloView(APIView):
             data = response.json()
             temp = data['main']['temp']
             return temp
-        except requests.RequestException:
+        except requests.RequestException as e:
             return "Unknown"
             
         
